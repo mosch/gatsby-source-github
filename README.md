@@ -23,7 +23,7 @@ This package is available on npm as "@mosch/gatsby-source-github".
 module.exports = {
   plugins: [
     {
-      resolve: `gatsby-source-github`,
+      resolve: `@mosch/gatsby-source-github`,
       options: {           
         repository: "YOUR_REPOSITORY",
         tree: true,
