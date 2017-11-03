@@ -5,7 +5,7 @@ const mime = require('mime-types')
 
 exports.sourceNodes = async (
   { boundActionCreators },
-  { user, repository, tree = false, releases = false, secrets = undefined }
+  { user, repository, tree = false, releases = false, secrets = {} }
 ) => {
   if (!user || !repository) {
     throw 'You need to define user & repository for gatsby-source-github to work'
@@ -20,13 +20,10 @@ exports.sourceNodes = async (
     `starting to fetch data from the Github API. Warning: This may take a long time.`
   )
 
-  const repo = octo
-      .repos(user, repository)
+  const repo = octo.repos(user, repository)
 
   if (tree) {
-    const data = await repo
-      .git.trees('HEAD')
-      .fetch({ recursive: 1 })
+    const data = await repo.git.trees('HEAD').fetch({ recursive: 1 })
 
     const files = await Promise.all(
       data.tree.filter(file => file.type !== 'tree').map(file =>
@@ -50,7 +47,7 @@ exports.sourceNodes = async (
               type: file.type,
               mime: mimeType,
               sha: file.sha,
-              content: buffer.toString('utf8'),
+              content: buffer.toString('utf8')
             }
           })
       )
@@ -68,14 +65,13 @@ exports.sourceNodes = async (
           contentDigest: crypto
             .createHash(`md5`)
             .update(file.content)
-            .digest(`hex`),
-        },
+            .digest(`hex`)
+        }
       })
     )
   }
 
   if (releases) {
-
   }
 
   console.timeEnd(`fetch Github data`)

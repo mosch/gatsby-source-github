@@ -10,7 +10,7 @@ const fileType = require('file-type');
 const mime = require('mime-types');
 
 exports.sourceNodes = (() => {
-  var _ref = _asyncToGenerator(function* ({ boundActionCreators }, { user, repository, tree = false, releases = false, secrets = undefined }) {
+  var _ref = _asyncToGenerator(function* ({ boundActionCreators }, { user, repository, tree = false, releases = false, secrets = {} }) {
     if (!user || !repository) {
       throw 'You need to define user & repository for gatsby-source-github to work';
     }
