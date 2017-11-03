@@ -1,6 +1,6 @@
 {
   "name": "@mosch/gatsby-source-github",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "homepage": "https://github.com/mosch/gatsby-source-github",
   "scripts": {
     "build": "babel src --out-dir .",
