@@ -9,12 +9,21 @@ Works with gatsby-transform-remark if you like to pull markdown files from your 
 * Pulling release information from Github repositories
 
 ## How to use
+
+### NPM package
+
+This package is available on npm as "@mosch/gatsby-source-github". 
+
+`yarn add @mosch/gatsby-source-github`
+
+### Gatsby Configuration
+
 ```javascript
 // In your gatsby-config.js
 module.exports = {
   plugins: [
     {
-      resolve: `gatsby-source-github`,
+      resolve: `@mosch/gatsby-source-github`,
       options: {           
         repository: "YOUR_REPOSITORY",
         tree: true,
