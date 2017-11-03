@@ -1,0 +1,23 @@
+{
+  "name": "gatsby-source-github",
+  "version": "0.1",
+  "scripts": {
+    "build": "babel src --out-dir .",
+    "watch": "babel src --watch --out-dir ."
+  },
+  "keywords": [
+    "gatsby",
+    "gatsby-plugin",
+    "gatsby-source-plugin"
+  ],
+  "dependencies": {
+    "file-type": "^7.2.0",
+    "mime-types": "^2.1.17",
+    "octokat": "^0.9.2"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-cli": "^6.26.0"
+  }
+}
