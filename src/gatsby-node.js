@@ -2,6 +2,8 @@ const Octokat = require('octokat')
 const crypto = require('crypto')
 const fileType = require('file-type')
 const mime = require('mime-types')
+const path = require('path')
+const minimatch = require('minimatch')
 
 exports.sourceNodes = async (
   { boundActionCreators },
@@ -23,34 +25,40 @@ exports.sourceNodes = async (
   const repo = octo.repos(user, repository)
 
   if (tree) {
+    const patternFilter = file => minimatch(file.path, (tree && tree.pattern) || '**')
     const data = await repo.git.trees('HEAD').fetch({ recursive: 1 })
 
     const files = await Promise.all(
-      data.tree.filter(file => file.type !== 'tree').map(file =>
-        octo
-          .fromUrl(file.url)
-          .fetch()
-          .then(result => {
-            const buffer = Buffer.from(result.content, 'base64')
-            const type = fileType(buffer)
-            const mimeType = type
-              ? type.mime
-              : mime.lookup(file.path) || 'plaintext'
+      data.tree
+        .filter(file => file.type !== 'tree')
+        .filter(patternFilter)
+        .map(file => {
+          return octo
+            .fromUrl(file.url)
+            .fetch()
+            .then(result => {
+              const buffer = Buffer.from(result.content, 'base64')
+              const type = fileType(buffer)
+              const mimeType = type
+                ? type.mime
+                : mime.lookup(file.path) || 'plaintext'
 
-            return {
-              user: user,
-              repository: repository,
-              path: file.path,
-              fileAbsolutePath: file.url,
-              relativePath: file.path,
-              url: file.url,
-              type: file.type,
-              mime: mimeType,
-              sha: file.sha,
-              content: buffer.toString('utf8')
-            }
-          })
-      )
+              return {
+                user: user,
+                repository: repository,
+                path: file.path,
+                fileAbsolutePath: file.url,
+                relativePath: file.path,
+                base: path.basename(file.path),
+                relativeDirectory: path.dirname(file.path),
+                url: file.url,
+                type: file.type,
+                mime: mimeType,
+                sha: file.sha,
+                content: buffer.toString('utf8'),
+              }
+            })
+        })
     )
 
     files.forEach(file =>
@@ -65,8 +73,8 @@ exports.sourceNodes = async (
           contentDigest: crypto
             .createHash(`md5`)
             .update(file.content)
-            .digest(`hex`)
-        }
+            .digest(`hex`),
+        },
       })
     )
   }

@@ -8,6 +8,8 @@ const Octokat = require('octokat');
 const crypto = require('crypto');
 const fileType = require('file-type');
 const mime = require('mime-types');
+const path = require('path');
+const minimatch = require('minimatch');
 
 exports.sourceNodes = (() => {
   var _ref = _asyncToGenerator(function* ({ boundActionCreators }, { user, repository, tree = false, releases = false, secrets = {} }) {
@@ -26,11 +28,14 @@ exports.sourceNodes = (() => {
     const repo = octo.repos(user, repository);
 
     if (tree) {
+      const patternFilter = function patternFilter(file) {
+        return minimatch(file.path, tree && tree.pattern || '**');
+      };
       const data = yield repo.git.trees('HEAD').fetch({ recursive: 1 });
 
       const files = yield Promise.all(data.tree.filter(function (file) {
         return file.type !== 'tree';
-      }).map(function (file) {
+      }).filter(patternFilter).map(function (file) {
         return octo.fromUrl(file.url).fetch().then(function (result) {
           const buffer = Buffer.from(result.content, 'base64');
           const type = fileType(buffer);
@@ -42,6 +47,8 @@ exports.sourceNodes = (() => {
             path: file.path,
             fileAbsolutePath: file.url,
             relativePath: file.path,
+            base: path.basename(file.path),
+            relativeDirectory: path.dirname(file.path),
             url: file.url,
             type: file.type,
             mime: mimeType,
