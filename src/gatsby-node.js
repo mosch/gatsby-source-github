@@ -80,6 +80,23 @@ exports.sourceNodes = async (
   }
 
   if (releases) {
+    const data = await repo.releases.fetch()
+
+    data.items.forEach(item => {
+      createNode({
+        ...item,
+        id: item.url,
+        parent: null,
+        children: [],
+        internal: {
+          type: 'GithubRelease',
+          contentDigest: crypto
+            .createHash(`md5`)
+            .update(JSON.stringify(item))
+            .digest(`hex`),
+        },
+      })
+    })
   }
 
   console.timeEnd(`fetch Github data`)
