@@ -72,7 +72,24 @@ exports.sourceNodes = (() => {
       });
     }
 
-    if (releases) {}
+    if (releases) {
+      const data = yield repo.releases.fetch();
+
+      data.items.forEach(function (item) {
+
+        const str = JSON.stringify(item);
+
+        createNode(_extends({}, item, {
+          id: item.url,
+          parent: null,
+          children: [],
+          internal: {
+            type: 'GithubRelease',
+            contentDigest: crypto.createHash(`md5`).update(str).digest(`hex`)
+          }
+        }));
+      });
+    }
 
     console.timeEnd(`fetch Github data`);
 
