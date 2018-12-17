@@ -50,7 +50,7 @@ exports.sourceNodes = async (
                 fileAbsolutePath: file.url,
                 relativePath: file.path,
                 base: path.basename(file.path),
-                relativeDirectory: path.dirname(file.path),
+                dir: path.dirname(file.path),
                 url: file.url,
                 type: file.type,
                 mime: mimeType,
