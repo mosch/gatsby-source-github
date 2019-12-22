@@ -795,9 +795,9 @@ fetch-vcr@^1.1.0:
     node-fetch "^1.6.3"
     whatwg-fetch "^2.0.3"
 
-file-type@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-7.2.0.tgz#113cfed52e1d6959ab80248906e2f25a8cdccb74"
+file-type@12.4.2:
+  version "12.4.2"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-12.4.2.tgz#a344ea5664a1d01447ee7fb1b635f72feb6169d9"
 
 filename-regex@^2.0.0:
   version "2.0.1"
